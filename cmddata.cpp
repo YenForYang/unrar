@@ -350,6 +350,8 @@ void CommandData::ProcessSwitch(const wchar *Switch)
           case 'H':
             OpenShared=true;
             break;
+          case 'E':
+            DeleteArchives=true;
           case 'F':
             DeleteFiles=true;
             break;

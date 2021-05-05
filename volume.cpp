@@ -33,6 +33,12 @@ bool MergeArchive(Archive &Arc,ComprDataIO *DataIO,bool ShowFileName,wchar Comma
 
   Arc.Close();
 
+  if ((Command=='X' || Command=='E') && (Cmd->DeleteArchives == true))
+  {
+    mprintf(MUnlinking, Arc.FileName);
+    Arc.Delete();
+  }
+
   wchar NextName[NM];
   wcsncpyz(NextName,Arc.FileName,ASIZE(NextName));
   NextVolumeName(NextName,ASIZE(NextName),!Arc.NewNumbering);

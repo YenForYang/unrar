@@ -161,6 +161,7 @@ class RAROptions
     bool KeepBroken;
     bool OpenShared;
     bool DeleteFiles;
+    bool DeleteArchives;
 
 #ifdef _WIN_ALL
     bool AllowIncompatNames; // Allow names with trailing dots and spaces.
