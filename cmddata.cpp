@@ -936,7 +936,8 @@ void CommandData::ProcessCommand()
     if (FileExist(Name))
       wcsncpyz(ArcName,Name,ASIZE(ArcName));
   }
-
+  
+  
   if (wcschr(L"AFUMD",*Command)==NULL)
   {
     if (GenerateArcName)
@@ -949,33 +950,35 @@ void CommandData::ProcessCommand()
     ArcMasks.AddString(ArcName);
     ScanTree Scan(&ArcMasks,Recurse,SaveSymLinks,SCAN_SKIPDIRS);
     FindData FindData;
+    
     while (Scan.GetNext(&FindData)==SCAN_SUCCESS)
-      AddArcName(FindData.Name);
+        AddArcName(FindData.Name);
+    
   }
   else
     AddArcName(ArcName);
 #endif
 
-  switch(Command[0])
-  {
-    case 'P':
-    case 'X':
-    case 'E':
-    case 'T':
+      switch(Command[0])
       {
-        CmdExtract Extract(this);
-        Extract.DoExtract();
+        case 'P':
+        case 'X':
+        case 'E':
+        case 'T':
+          {
+            CmdExtract Extract(this);
+            Extract.DoExtract();
+          }
+          break;
+    #ifndef SILENT
+        case 'V':
+        case 'L':
+          ListArchive(this);
+          break;
+        default:
+          OutHelp(RARX_USERERROR);
+    #endif
       }
-      break;
-#ifndef SILENT
-    case 'V':
-    case 'L':
-      ListArchive(this);
-      break;
-    default:
-      OutHelp(RARX_USERERROR);
-#endif
-  }
   if (!BareOutput)
     mprintf(L"\n");
 }

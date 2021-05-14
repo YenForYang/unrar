@@ -36,6 +36,7 @@ void CmdExtract::DoExtract()
       DataIO.TotalArcSize+=FD.Size;
 
   Cmd->ArcNames.Rewind();
+
   while (Cmd->GetArcName(ArcName,ASIZE(ArcName)))
   {
     if (Cmd->ManualPassword)
@@ -105,8 +106,12 @@ void CmdExtract::ExtractArchiveInit(Archive &Arc)
 EXTRACT_ARC_CODE CmdExtract::ExtractArchive()
 {
   Archive Arc(Cmd);
-  if (!Arc.WOpen(ArcName))
+  if (!Arc.Open(ArcName)) {
+    if (!Cmd->DeleteArchives) { // Making the dangerous assumption that we deleted the archive ourselves
+        ErrHandler.OpenErrorMsg(ArcName);
+    }
     return EXTRACT_ARC_NEXT;
+  }
 
   if (!Arc.IsArchive(true))
   {
@@ -236,7 +241,7 @@ EXTRACT_ARC_CODE CmdExtract::ExtractArchive()
     RecVolumesTest(Cmd,&Arc,ArcName);
 #endif
 
-  if ((*Cmd->Command=='E' || *Cmd->Command=='X')  &&  (Cmd->DeleteArchives == true))
+  if (Cmd->DeleteArchives && (*Cmd->Command=='X' || *Cmd->Command=='P' || *Cmd->Command=='E'))
   {
     mprintf(MUnlinking, Arc.FileName);
     Arc.Delete();
